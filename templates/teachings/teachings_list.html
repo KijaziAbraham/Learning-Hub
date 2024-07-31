@@ -1,0 +1,48 @@
+{% extends "main.html" %}
+{% load static %}
+
+
+{% block extend_header %}
+
+{% endblock %}
+
+
+
+{% block content %}
+  <div class="pagetitle">
+    <h1>Channels List</h1>
+  </div>
+
+  <section class="section">
+    <div class="row">
+      {% for channel in channels %}
+        <div class="col-lg-4">
+          <div class="card channel-card">
+            <div class="card-body">
+              <h5 class="card-title">{{ channel.name }}</h5>
+              <div class="col-md-8 col-lg-9">
+                {% if channel.teacher_profile.channel_profile_image %}
+                  <img src="{{ channel.teacher_profile.channel_profile_image.url }}" class="d-block w-100" alt="{{ channel.name }}">
+                {% else %}
+                  <img src="{% static 'img/placeholder.jpg' %}" class="d-block w-100" alt="No Profile Image Available">
+                {% endif %}
+              </div>
+              <p class="card-text">{{ channel.description|truncatewords:20 }}</p>
+              
+              <a href="{% url 'teaching_detail' channel.id %}" class="btn-primary-custom">
+                <i class="fas fa-arrow-right"></i> View Channel
+              </a>   
+                   
+             </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+</section>
+
+{% endblock %}
+
+{%block extend_footer%}
+
+{%endblock%}

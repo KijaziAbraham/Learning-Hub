@@ -1,0 +1,40 @@
+{%extends "base_auth.html"%}
+{% load static %}
+
+{%block extend_head%}
+  <title>Login</title>
+  {%endblock%}
+
+{%block content%}
+     <section class="ftco-section">
+        <div class="container">           
+     <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+        <div class="row">
+            <h4>Login</h4>
+                <div class="col">
+                    <div class="input-group input-group-icon">
+                        <input type="text" name="username" placeholder="Username" required>
+                            <div class="input-icon"><i class="fa fa-user"></i></div>
+                    </div>
+                     <div class="input-group input-group-icon">
+                        <input type="password" name="password" placeholder="Password" required>
+                     <div class="input-icon"><i class="fa fa-key"></i></div>
+                </div>
+                <div class="text-left">
+                <button class="btn btn-primary-custom text-start" type="submit" style="width: auto;">Login</button>
+        </div>
+
+        <div class="col-12 text-center">
+        <p class="small mb-0">Don't have an account? <a href="{% url 'register' %}">Create an account</a></p>
+        </div>
+     </form>                
+    </div>
+        </div>
+    </section>
+{%endblock%}
+
+
+{%block extend_footer%}
+
+{%endblock%}

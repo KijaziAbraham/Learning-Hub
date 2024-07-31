@@ -1,0 +1,66 @@
+{% extends "main.html" %}
+{% load static %}
+
+{% block extend_header %}
+
+{% endblock %}
+
+
+{% block content %}
+
+
+  <div class="pagetitle">
+    <h1>{{ category.name }}</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">Teachings</li>
+        <li class="breadcrumb-item active">{{ channel.name }}</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="pagetitle">
+    <h1>{{ channel.name }}</h1>
+    <p>{{ channel.description }}</p>
+  </div>
+
+  <section class="section">
+    <div class="row">
+      {% for teaching in teachings %}
+        <div class="col-lg-4">
+          <div class="card teaching-card">
+            <div class="card-body">
+              <h5 class="card-title">{{ teaching.title }}</h5>
+              {% if teaching.thumbnail %}
+                <img src="{{ teaching.thumbnail.url }}" class="d-block w-100" alt="{{ teaching.title }}">
+              {% else %}
+                <img src="{% static 'img/placeholder.jpg' %}" class="d-block w-100" alt="No Thumbnail Available">
+              {% endif %}
+              <p class="card-text">{{ teaching.description|truncatewords:20 }}</p>
+              <div class="button-group">
+                {% if teaching.video %}
+                  <a href="{{ teaching.video.url }}" class="btn-primary-custom">
+                    <i class="fas fa-video"></i> Watch Video
+                  </a>
+                {% endif %}
+                {% if teaching.file %}
+                  <a href="{{ teaching.file.url }}" class="btn-primary-custom">
+                    <i class="fas fa-file-audio"></i> Listen Audio
+                  </a>
+                {% endif %}
+                {% if teaching.file %}
+                  <a  href="{{ teaching.file.url }}" class="btn-primary-custom">
+                    <i class="fas fa-download"></i> Download File
+                  </a>
+                
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+</section>
+
+{% endblock %}

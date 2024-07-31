@@ -1,0 +1,26 @@
+{%extends "base_auth.html"%}
+{% load static %}
+
+{%block extend_head%}
+  <title>Logout</title>
+  {%endblock%}
+
+{%block content%}
+<section class="ftco-section">
+    <div class="container">           
+ <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+    <div class="row">
+    <h4>Logout</h4>
+  </div>
+  <p>You have been logged out. <a href="{% url 'login' %}">Login again?</a></p>
+</div>
+</section>
+
+{%endblock%}
+
+
+{%block extend_footer%}
+
+{%endblock%}
+

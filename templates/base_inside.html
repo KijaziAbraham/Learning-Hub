@@ -1,0 +1,198 @@
+{%load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+<!-- Include SweetAlert -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  
+<meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'img/favicon.png' %}" rel="icon">
+  <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/quill/quill.snow.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/quill/quill.bubble.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/simple-datatables/style.css' %}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+{%block extend_head%}
+
+{%endblock%}
+</head>
+
+<body>
+    <header id="header" class="header fixed-top d-flex align-items-center">
+        <div class="logo">
+          <h1 class="d-none d-lg-block">AccoG</h1>
+        </div>
+        
+        <div>
+          <i class="bi bi-list toggle-sidebar-btn"></i>
+        </div>
+        
+        <div class="search-bar">
+          <form class="search-form d-flex align-items-center" method="POST" action="#">
+            <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+            <button type="submit" title="Search"><i class="fa fa-search"></i></button>
+          </form>
+        </div>
+        
+        <nav class="header-nav ms-auto">
+          <ul class="d-flex align-items-center">
+            <li class="nav-item d-block d-lg-none">
+              <a class="nav-link nav-icon search-bar-toggle" href="#">
+                <i class="fa fa-search"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
+    
+        {% block extend_header %}
+        {% endblock %}
+        
+        <nav class="header-nav ms-auto">
+          <ul class="nav nav-pills nav-pills-bordered mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item d-block d-lg-none"></li>
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link {% if request.path == '/teachings/' %}active{% endif %}" href="{% url 'teachings_list' %}">Teachings</a>
+              </li>
+              {% if user.is_staff %}
+                <li class="nav-item">
+                  <a class="nav-link {% if request.path == '/approve_channel/' %}active{% endif %}" href="{% url 'approve_channel' %}">Approve Channels</a>
+                </li>
+              {% endif %}
+              {% if user.is_teacher %}
+                <li class="nav-item">
+                  <a class="nav-link {% if request.path == '/request_channel/' %}active{% endif %}" href="{% url 'request_channel' %}">Request Channel</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link {% if request.path == '/upload_teaching/' %}active{% endif %}" href="{% url 'upload_teaching' %}">Upload Teaching</a>
+                </li>
+              {% endif %}
+              <li class="nav-item">
+                <a class="nav-link {% if request.path == '/logout/' %}active{% endif %}" href="{% url 'logout' %}">Logout</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link {% if request.path == '/login/' %}active{% endif %}" href="{% url 'login' %}">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% if request.path == '/register/' %}active{% endif %}" href="{% url 'register' %}">Register</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+        
+        
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          const navLinks = document.querySelectorAll('.nav-pills .nav-link');
+        
+          navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+              navLinks.forEach(nav => nav.classList.remove('active'));
+              this.classList.add('active');
+            });
+          });
+        
+          // Fallback logic: ensure "Teachings" is active if no other link is active
+          const activeLink = document.querySelector('.nav-pills .nav-link.active');
+          if (!activeLink) {
+            const teachingsLink = document.querySelector('.nav-pills .nav-link[href="{% url 'teachings_list' %}"]');
+            if (teachingsLink) {
+              teachingsLink.classList.add('active');
+            }
+          }
+        });
+        </script>
+    
+    </header>
+
+
+
+ <main>
+{%block content%}
+
+{%endblock%}
+</main>
+
+    <!-- JavaScript code to trigger SweetAlert -->
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'error' %}
+                swal("Error", "{{ message }}", "error");
+            {% elif message.tags == 'success' %}
+                swal("Success", "{{ message }}", "success");
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    </script>
+    
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-item">
+                <a href="#">About</a>
+            </div>
+            <div class="footer-item">
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-item">
+                <a href="#">Privacy Policy</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-item">
+                <div class="footer-content">
+                    <span class="footer-text">English (UK)</span>
+                    <span class="footer-text">&copy; 2024 AccoG</span>
+                </div>
+            </div>
+        </div>
+
+    </footer>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'vendor/apexcharts/apexcharts.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/chart.js/chart.umd.js' %}"></script>
+  <script src="{% static 'vendor/echarts/echarts.min.js' %}"></script>
+  <script src="{% static 'vendor/quill/quill.min.js' %}"></script>
+  <script src="{% static 'vendor/simple-datatables/simple-datatables.js' %}"></script>
+  <script src="{% static 'vendor/tinymce/tinymce.min.js' %}"></script>
+  <script src="{% static 'vendor/php-email-form/validate.js' %}"></script>
+
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'js/scripts.js' %}"></script>
+
+  
+  {%block extend_footer%}
+  {%endblock%}
+    
+  </body>
+  
+  </html>
+  

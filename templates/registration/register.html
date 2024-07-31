@@ -1,0 +1,94 @@
+{%extends "base_auth.html"%}
+{% load static %}
+
+{%block extend_head%}
+  <title>register</title>
+  {%endblock%}
+
+{%block content%}
+
+<section class="ftco-section">        
+    
+        <div class="container">
+            <form class="row g-3 needs-validation" method="post" novalidate>
+                {% csrf_token %}
+                <h4>Account</h4>
+                <div class="col">
+                <div class="input-group input-group-icon">
+                    <input type="text" name="username" placeholder="User Name" required>
+                    <div class="input-icon"><i class="fa fa-user"></i></div>
+                </div>
+                <div class="input-group input-group-icon">
+                  <input type="text" name="fullname" placeholder="Full Name" required>
+                  <div class="input-icon"><i class="fa fa-user"></i></div>
+              </div>
+                <div class="input-group input-group-icon">
+                    <input type="email" name="email" placeholder="Email Address" required>
+                    <div class="input-icon"><i class="fa fa-envelope"></i></div>
+                </div>
+                <div class="input-group input-group-icon">
+                    <input type="password" name="password1" placeholder="Password" required>
+                    <div class="input-icon"><i class="fa fa-key"></i></div>
+                </div>
+                <div class="input-group input-group-icon">
+                    <input type="password" name="password2" placeholder="Confirm Password" required>
+                    <div class="input-icon"><i class="fa fa-key"></i></div>
+                </div>
+              </div>
+                <!-- Are you a teacher? -->
+              <div class="row mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="is_teacher" id="is_teacher">
+                    <label class="form-check-label" for="is_teacher">
+                        Are you a teacher?
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-12">
+              <h4>Terms and Conditions</h4>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="terms" required>
+                <label class="form-check-label" for="terms">
+                  I accept the <a href="#" id="privacyPolicyLink">privacy policy</a> for signing up to this service, and hereby confirm I have read the privacy policy.
+                </label>
+              </div>
+              
+              <!-- Privacy Policy Modal -->
+              <div class="modal fade" id="privacyPolicyModal" tabindex="-1" aria-labelledby="privacyPolicyModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="privacyPolicyModalLabel">Privacy Policy</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Your privacy policy content goes here...</p>
+                      <!-- Replace with your actual privacy policy content -->
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+                  <div class="row mt-3">
+                    <div class="col-12 text-left">
+                        <button class="btn btn-primary-custom text-start" type="submit" style="width: auto;">Register</button>
+                      </div>
+                      
+                    <div class="col-12 text-center">
+                      <p class="small mb-0">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+                    </div>
+                  </div>
+                </div>
+              </form>
+        </div> 
+</section>
+{%endblock%}
+
+{%block extend_footer%}
+
+{%endblock%}
+
+

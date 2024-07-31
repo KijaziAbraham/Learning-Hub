@@ -1,0 +1,28 @@
+{% extends "main.html" %}
+
+{% block extend_header %}
+
+{% endblock %}
+
+
+{% block content %}
+  <div class="pagetitle">
+    <h1>Channel Profile</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Profile</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary-custom">Save changes</button>
+  </form>
+</section>
+{% endblock %}
+
+{%block extend_footer%}
+
+{%endblock%}

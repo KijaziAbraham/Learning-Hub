@@ -1,0 +1,179 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<section id="maino" class="mt-5" style="padding-left: 30px; padding-right: 5px;">
+  <div class="container-fluid mt-5">
+    <div class="header">
+      <h2>Approve Channels</h2>
+    </div>
+    {% if channels %}
+      <ul class="list-group">
+        {% for channel in channels %}
+          <li class="list-group-item p-3 mb-2 border rounded shadow-sm">
+            <div class="d-flex w-100 justify-content-between align-items-center">
+              <h5 class="mb-1">Channel Name: <strong>{{ channel.name }}</strong></h5>
+              <button type="button" class="btn btn-primary" style="width: auto" data-bs-toggle="modal" data-bs-target="#approveModal" data-channel-id="{{ channel.id }}" data-channel-name="{{ channel.name }}" data-channel-owner="{{ channel.teacher.username }}">
+                <i class="fa fa-check"></i> Approve
+              </button>
+            </div>
+            <p class="mb-1 text-muted"><i class="fa fa-user"></i> Channel Owner: {{ channel.teacher.username }}</p>
+            <p class="mb-1 text-muted"><i class="fa fa-info-circle"></i> Channel Description: 
+              {{ channel.description|truncatechars:50 }}
+              {% if channel.description|length > 50 %}
+                <a href="#" class="read-more-link" data-bs-toggle="modal" data-bs-target="#descriptionModal" data-channel-description="{{ channel.description }}">Read More</a>
+              {% endif %}
+            </p>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-muted">No channels to approve at the moment.</p>
+    {% endif %}
+  </div>
+
+  <!-- Description Modal -->
+  <div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="descriptionModalLabel">Channel Description</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="fullChannelDescription" style="white-space: pre-wrap;"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Approve Modal -->
+  <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="approveModalLabel">Approve Channel</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to approve the channel <strong><span id="modalChannelName"></span></strong> owned by the user <strong><span id="modalChannelOwner"></span></strong>?
+        </div>
+        <div class="modal-footer">
+          <form method="post" id="approveForm">
+            {% csrf_token %}
+            <input type="hidden" name="channel_id" id="modalChannelId">
+            <button type="button" class="btn btn-secondary" style="width: auto" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" style="width: auto" class="btn btn-primary">Approve</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container-fluid mt-5">
+    <div class="header">
+      <h2>Recent Channels</h2>
+    </div>
+    <table class="table table-borderless datatable">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">User</th>
+          <th scope="col">Channel Name</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for channel in recent_channels %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ channel.teacher.username }}</td>
+            <td>{{ channel.name }}</td>
+            <td>
+              {% if channel.approved %}
+                <span class="badge bg-success">Approved</span>
+              {% else %}
+                <span class="badge bg-warning">Pending</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
+
+{% block right_content %}
+<section class="mt-5" style="padding-left: 0px; padding-right: 30px;">
+  <div class="container mt-5">
+    <div class="header ">
+      <h2>Website Traffic</h2>
+    </div>
+    <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        echarts.init(document.querySelector("#trafficChart")).setOption({
+          tooltip: {
+            trigger: 'item'
+          },
+          legend: {
+            top: '5%',
+            left: 'center'
+          },
+          series: [{
+            name: 'Access From',
+            type: 'pie',
+            radius: ['40%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+              show: false,
+              position: 'center'
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: '18',
+                fontWeight: 'bold'
+              }
+            },
+            labelLine: {
+              show: false
+            },
+            data: [
+              { value: 1048, name: 'Search Engine' },
+              { value: 735, name: 'Direct' },
+              { value: 580, name: 'Email' },
+              { value: 484, name: 'Union Ads' },
+              { value: 300, name: 'Video Ads' }
+            ]
+          }]
+        });
+      });
+    </script>
+  </div>
+
+  <div class="container mt-1">
+    <div class="header">
+      <h2>Recent Teachings</h2>
+    </div>
+    <ul>
+      {% for teaching in recent_teachings %}
+        <li>
+          <h4>{{ teaching.title }}</h4>
+          <p>{{ teaching.description }}</p>
+          <p>Channel: {{ teaching.channel.name }}</p>
+          <p>Start Time: {{ teaching.start_time }}</p>
+          <p>End Time: {{ teaching.end_time }}</p>
+          {% if teaching.file %}
+            <p><a href="{{ teaching.file.url }}">Download Teaching</a></p>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endblock %}
